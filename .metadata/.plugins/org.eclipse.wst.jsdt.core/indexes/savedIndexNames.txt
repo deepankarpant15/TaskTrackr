@@ -1,0 +1,8 @@
+INDEX VERSION 1.4+C:\Users\Lenovo\Desktop\anime\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+3693815471.index
+2619204240.index
+3428253274.index
+60595246.index
+2074118280.index
+1519833739.index
+2470724118.index

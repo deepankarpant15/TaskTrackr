@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Trackr/src/main/webapp/todo/calender.jsp&apos; to &apos;calendar.jsp&apos;" description="Rename resource &apos;calender.jsp&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/webapp/todo/calender.jsp" name="calendar.jsp" stamp="1731827243316" updateReferences="true"/>
+</session>

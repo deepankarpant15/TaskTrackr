@@ -1,0 +1,142 @@
+package controller;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.TodoItemsDAO;
+import model.TodoItemBean;
+
+@WebServlet(urlPatterns = {"/insert", "/delete", "/getItems", "/add"})
+public class TodoItemsController extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    private TodoItemsDAO todoItemsDAO;
+
+    @Override
+    public void init() throws ServletException {
+        todoItemsDAO = new TodoItemsDAO();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String url = req.getServletPath();
+
+        switch (url) {
+            case "/insert":
+                insertItem(req, resp);
+                break;
+            case "/delete":
+                deleteItem(req, resp);
+                break;
+            case "/getItems":
+                getItems(req, resp);
+                break;
+            case "/add":
+                showAddPage(req, resp);
+                break;
+            default:
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                break;
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+    }
+
+    private void showAddPage(HttpServletRequest req, HttpServletResponse resp) {
+        req.setAttribute("username", req.getParameter("username"));
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/todo/todo-add.jsp");
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getItems(HttpServletRequest req, HttpServletResponse resp) {
+        String username = req.getParameter("username");
+        if (username == null || username.isEmpty()) {
+            req.setAttribute("errorMessage", "Username is required to view items.");
+            forwardToErrorPage(req, resp);
+            return;
+        }
+
+        List<TodoItemBean> todoItems = todoItemsDAO.getTodoItems(username);
+        req.setAttribute("todoList", todoItems);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("todo/todo-main.jsp");
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteItem(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            int id = Integer.parseInt(req.getParameter("id"));
+            todoItemsDAO.deleteItem(id);
+            resp.sendRedirect("getItems?username=" + req.getParameter("username"));
+        } catch (NumberFormatException | IOException e) {
+            e.printStackTrace();
+            forwardToErrorPage(req, resp);
+        }
+    }
+
+    private void insertItem(HttpServletRequest req, HttpServletResponse resp) {
+        String title = req.getParameter("title");
+        String username = req.getParameter("username");
+        String isDoneStr = req.getParameter("isDone");
+        String dateString = req.getParameter("targetDate");
+
+        if (title == null || username == null || dateString == null || title.isEmpty() || username.isEmpty() || dateString.isEmpty()) {
+            req.setAttribute("errorMessage", "Title, username, and target date are required fields.");
+            forwardToErrorPage(req, resp);
+            return;
+        }
+
+        boolean isDone = Boolean.parseBoolean(isDoneStr);
+        LocalDate targetDate;
+        try {
+            targetDate = LocalDate.parse(dateString);
+        } catch (Exception e) {
+            req.setAttribute("errorMessage", "Invalid date format. Please use yyyy-MM-dd.");
+            forwardToErrorPage(req, resp);
+            return;
+        }
+
+        TodoItemBean newTodoItem = new TodoItemBean();
+        newTodoItem.setTitle(title);
+        newTodoItem.setUsername(username);
+        newTodoItem.setIsDone(isDone);
+        newTodoItem.setTargetDate(targetDate);
+
+        if (todoItemsDAO.insertItem(newTodoItem)) {
+            try {
+                resp.sendRedirect("getItems?username=" + username);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            req.setAttribute("errorMessage", "Error inserting item.");
+            forwardToErrorPage(req, resp);
+        }
+    }
+
+    private void forwardToErrorPage(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            RequestDispatcher dispatcher = req.getRequestDispatcher("/errorjsp.jsp");
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

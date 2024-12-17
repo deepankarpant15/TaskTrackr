@@ -1,0 +1,137 @@
+ <!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Calendar</title>
+   Include FullCalendar CSS and JS 
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales-all.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Task Calendar</h1>
+    <div id="calendar"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: 'fetch-tasks', // URL to fetch events from the backend
+                eventClick: function(info) {
+                    alert('Task: ' + info.event.title);
+                }
+            });
+            calendar.render();
+        });
+    </script>
+</body>
+</html>
+
+
+
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Calendar</title>
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
+</head>
+<body>
+
+    <h1>Todo Calendar</h1>
+
+    <!-- Button to show events/tasks in the calendar 
+    <button onclick="loadTasks()">Show Tasks</button>
+
+    <div id="calendar"></div>
+
+    <script>
+        // Initialize the calendar
+        $(document).ready(function() {
+            $('#calendar').fullCalendar({
+                // Other FullCalendar options can be added here
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                events: [] // This will be filled dynamically
+            });
+        });
+
+        // Function to load tasks from the server
+        function loadTasks() {
+            // AJAX call to the backend to get the tasks
+            $.ajax({
+                url: 'getTasks', // Mapping to a servlet (you will create this servlet)
+                method: 'GET',
+                success: function(response) {
+                    var events = JSON.parse(response); // Parse the response (assuming JSON format)
+                    $('#calendar').fullCalendar('removeEvents'); // Clear any previous events
+                    $('#calendar').fullCalendar('addEventSource', events); // Add the new tasks as events
+                },
+                error: function() {
+                    alert('Error loading tasks');
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
+-->
+
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Calendar</title>
+    
+    <!-- Link to FullCalendar CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.css">
+
+    <!-- Link to custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include FullCalendar JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
+
+    <!-- Link to custom JS -->
+    <script src="js/scripts.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Your Todo Calendar</h2>
+        
+        <!-- FullCalendar Container -->
+        <div id="calendar"></div>
+    </div>
+</body>
+</html>
